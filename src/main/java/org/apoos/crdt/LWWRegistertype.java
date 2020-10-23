@@ -3,6 +3,9 @@ package org.apoos.crdt;
 import com.netopyr.wurmloch.crdt.LWWRegister;
 import com.netopyr.wurmloch.store.LocalCrdtStore;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -37,5 +40,7 @@ public class LWWRegistertype {
 
         assertThat(replica1.get(), is("pear"));
         assertThat(replica2.get(), is("pear"));
+        
+
     }
 }

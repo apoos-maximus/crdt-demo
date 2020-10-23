@@ -3,6 +3,9 @@ package org.apoos.crdt;
 import com.netopyr.wurmloch.crdt.MVRegister;
 import com.netopyr.wurmloch.store.CrdtStore;
 import com.netopyr.wurmloch.store.LocalCrdtStore;
+import javaslang.collection.Array;
+
+import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -35,8 +38,19 @@ public class MVRegisterType {
        assertThat(replica1.get(), containsInAnyOrder("strawberry", "pear"));
        assertThat(replica2.get(), containsInAnyOrder("strawberry", "pear"));
 
+       Array<String> colc = replica1.get();
+       for (String ffv: colc) {
+          System.out.println(ffv);
+       }
+
        replica2.set("orange");
        assertThat(replica1.get(), contains("orange"));
        assertThat(replica2.get(), contains("orange"));
+
+       Array<String> collection = replica1.get();
+       for (String ar: collection) {
+          System.out.println(ar);
+       }
+
     }
 }
