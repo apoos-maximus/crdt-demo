@@ -10,12 +10,12 @@ public class LWWRegistertype {
     String type = "Last Writer Wins";
 
     public static void merge(){
-        LocalCrdtStore crdtStore1 = new LocalCrdtStore("N_1");
-        LocalCrdtStore crdtStore2 = new LocalCrdtStore("N_2");
+        final LocalCrdtStore crdtStore1 = new LocalCrdtStore("N_1");
+        final LocalCrdtStore crdtStore2 = new LocalCrdtStore("N_2");
         crdtStore1.connect(crdtStore2);
 
-        LWWRegister<String> replica1 = crdtStore1.createLWWRegister("ID_1");
-        LWWRegister<String> replica2 = crdtStore2.<String>findLWWRegister("ID_1").get();
+        final LWWRegister<String> replica1 = crdtStore1.createLWWRegister("ID_1");
+        final LWWRegister<String> replica2 = crdtStore2.<String>findLWWRegister("ID_1").get();
 
         replica1.set("apple");
         replica2.set("banana");
