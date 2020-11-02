@@ -53,4 +53,75 @@ public class MVRegisterType {
        }
 
     }
+
+    public static void manyMerge(){
+       final LocalCrdtStore crdtStore1 = new LocalCrdtStore();
+       final LocalCrdtStore crdtStore2 = new LocalCrdtStore();
+       final LocalCrdtStore crdtStore3 = new LocalCrdtStore();
+       crdtStore2.connect(crdtStore1);
+       crdtStore2.connect(crdtStore3);
+
+       final MVRegister<String> replica1 = crdtStore1.createMVRegister("ID_1");
+       final MVRegister<String> replica2 = crdtStore2.<String>findMVRegister("ID_1").get();
+       final MVRegister<String> replica3 = crdtStore3.<String>findMVRegister("ID_1").get();
+
+       // disconnect 2 and 3
+       crdtStore2.disconnect(crdtStore3);
+
+       //set some values
+       replica1.set("apple");
+       replica3.set("banana");
+
+       //stores 1 and 2 contain apple store 3 contains banana
+       assertThat(replica1.get(), containsInAnyOrder("apple"));
+       assertThat(replica2.get(), containsInAnyOrder("apple"));
+       assertThat(replica3.get(), containsInAnyOrder("banana"));
+
+       Array<String> colc = replica1.get();
+       System.out.println(colc);
+       colc = replica2.get();
+       System.out.println(colc);
+       colc = replica3.get();
+       System.out.println(colc);
+       System.out.println("================================");
+
+
+
+       crdtStore2.disconnect(crdtStore1);
+       crdtStore2.connect(crdtStore3);
+
+       // 1 to strawberry
+       replica1.set("strawberry");;
+
+       //strawberry in 1
+       // 2 and 3 are synchronized
+       assertThat(replica1.get(), containsInAnyOrder("strawberry"));
+       assertThat(replica2.get(), containsInAnyOrder("apple", "banana"));
+       assertThat(replica3.get(), containsInAnyOrder("apple", "banana"));
+
+       colc = replica1.get();
+       System.out.println(colc);
+       colc = replica2.get();
+       System.out.println(colc);
+       colc = replica3.get();
+       System.out.println(colc);
+       System.out.println("================================");
+
+
+       //connect all three
+       crdtStore2.connect(crdtStore1);
+
+       assertThat(replica1.get(), containsInAnyOrder("strawberry", "banana"));
+       assertThat(replica2.get(), containsInAnyOrder("strawberry", "banana"));
+       assertThat(replica3.get(), containsInAnyOrder("strawberry", "banana"));
+
+       colc = replica1.get();
+       System.out.println(colc);
+       colc = replica2.get();
+       System.out.println(colc);
+       colc = replica3.get();
+       System.out.println(colc);
+       System.out.println("================================");
+
+    }
 }
